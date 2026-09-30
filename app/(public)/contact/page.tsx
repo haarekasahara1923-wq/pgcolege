@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
+import Image from "next/image";
 import {
   MapPin,
   Phone,
@@ -78,8 +79,12 @@ export default async function ContactPage() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 py-16 px-4 text-center text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_white_1px,_transparent_0)] bg-[size:32px_32px]" />
+      <section className="relative py-16 px-4 text-center text-white overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <Image src="https://images.unsplash.com/photo-1557200134-90327ee9fafa?q=80&w=2000&auto=format&fit=crop" alt="Contact Prathvi Group" fill className="object-cover object-center" priority />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-950/90 via-blue-900/80 to-slate-900/90" />
+        </div>
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_white_1px,_transparent_0)] bg-[size:32px_32px] z-0" />
         <div className="relative z-10 max-w-4xl mx-auto space-y-3">
           <span className="px-4 py-1.5 rounded-full bg-yellow-400/20 text-yellow-300 font-bold text-xs uppercase tracking-wider">
             Admissions Desk

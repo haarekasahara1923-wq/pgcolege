@@ -35,8 +35,12 @@ export default async function AboutPage() {
   return (
     <div className="min-h-screen">
       {/* Banner */}
-      <section className="bg-gradient-to-br from-blue-950 via-blue-900 to-slate-900 py-20 px-4 text-center text-white relative overflow-hidden">
-        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_white_1px,_transparent_0)] bg-[size:32px_32px]" />
+      <section className="relative py-20 px-4 text-center text-white overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <Image src="https://images.unsplash.com/photo-1523050854058-8df90110c9f1?q=80&w=2000&auto=format&fit=crop" alt="About Prathvi Group" fill className="object-cover object-center" priority />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-950/90 via-blue-900/80 to-slate-900/90" />
+        </div>
+        <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_white_1px,_transparent_0)] bg-[size:32px_32px] z-0" />
         <div className="relative z-10 max-w-4xl mx-auto space-y-4">
           <span className="px-4 py-1.5 rounded-full bg-yellow-400/20 text-yellow-300 font-bold text-xs uppercase tracking-wider">
             Institutional Legacy

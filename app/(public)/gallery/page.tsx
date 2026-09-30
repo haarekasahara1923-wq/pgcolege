@@ -63,8 +63,12 @@ export default function GalleryPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Hero */}
-      <section className="bg-gradient-to-br from-blue-950 to-blue-800 py-16 px-4">
-        <div className="max-w-4xl mx-auto text-center">
+      <section className="relative py-16 px-4 text-center text-white overflow-hidden">
+        <div className="absolute inset-0 z-0">
+          <Image src="https://images.unsplash.com/photo-1523580494112-071dba92a5d3?q=80&w=2000&auto=format&fit=crop" alt="Gallery Prathvi Group" fill className="object-cover object-center" priority />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-950/90 to-blue-800/80" />
+        </div>
+        <div className="relative z-10 max-w-4xl mx-auto text-center">
           <h1 className="text-4xl lg:text-5xl font-bold text-white mb-4">Gallery</h1>
           <p className="text-blue-200 text-lg">Memories and moments from our campus</p>
         </div>
