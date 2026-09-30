@@ -1,4 +1,4 @@
-﻿import { z } from "zod";
+import { z } from "zod";
 
 export const enquirySchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters").max(100),
@@ -48,6 +48,10 @@ export const aboutSchema = z.object({
   description: z.string().min(10),
   vision: z.string().min(10),
   mission: z.string().min(10),
+  directorName: z.string().optional().or(z.literal("")),
+  directorMessage: z.string().optional().or(z.literal("")),
+  principalName: z.string().optional().or(z.literal("")),
+  principalMessage: z.string().optional().or(z.literal("")),
 });
 
 export type AboutFormData = z.infer<typeof aboutSchema>;

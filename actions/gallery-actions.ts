@@ -69,3 +69,31 @@ export async function deleteGalleryItem(id: string) {
     return { error: "Failed to delete gallery item" };
   }
 }
+
+export async function deleteMultipleGalleryItems(ids: string[]) {
+  await requireSession();
+
+  try {
+    const items = await prisma.galleryItem.findMany({ where: { id: { in: ids } } });
+
+    // Delete from Cloudinary
+    for (const item of items) {
+      if (item.publicId) {
+        const resourceType = item.type === "VIDEO" ? "video" : "image";
+        await deleteCloudinaryAsset(item.publicId, resourceType);
+      }
+    }
+
+    await prisma.galleryItem.deleteMany({ where: { id: { in: ids } } });
+
+    revalidatePath("/");
+    revalidatePath("/gallery");
+    revalidatePath("/admin/gallery");
+    revalidatePath("/admin/dashboard");
+
+    return { success: true };
+  } catch (error) {
+    console.error("Delete multiple gallery items error:", error);
+    return { error: "Failed to delete multiple gallery items" };
+  }
+}

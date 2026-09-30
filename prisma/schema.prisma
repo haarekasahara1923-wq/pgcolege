@@ -46,14 +46,22 @@ model Course {
 }
 
 model AboutContent {
-  id            String    @id @default(cuid())
-  title         String    @default("About Us")
-  description   String    @default("")
-  vision        String    @default("")
-  mission       String    @default("")
-  imageUrl      String?
-  imagePublicId String?
-  updatedAt     DateTime  @updatedAt
+  id                String    @id @default(cuid())
+  title             String    @default("About Us")
+  description       String    @default("")
+  vision            String    @default("")
+  mission           String    @default("")
+  imageUrl          String?
+  imagePublicId     String?
+  directorName      String?
+  directorMessage   String?
+  directorImageUrl  String?
+  directorImageId   String?
+  principalName     String?
+  principalMessage  String?
+  principalImageUrl String?
+  principalImageId  String?
+  updatedAt         DateTime  @updatedAt
 }
 
 model ContactDetails {

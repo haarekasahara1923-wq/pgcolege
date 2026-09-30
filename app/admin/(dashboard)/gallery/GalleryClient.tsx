@@ -19,7 +19,7 @@ import {
   Filter,
 } from "lucide-react";
 import { toast } from "sonner";
-import { createGalleryItem, deleteGalleryItem } from "@/actions/gallery-actions";
+import { createGalleryItem, deleteGalleryItem, deleteMultipleGalleryItems } from "@/actions/gallery-actions";
 
 interface GalleryItemType {
   id: string;
@@ -55,6 +55,8 @@ export default function GalleryClient({ initialItems }: GalleryClientProps) {
   const [items, setItems] = useState<GalleryItemType[]>(initialItems);
   const [activeTab, setActiveTab] = useState<"ALL" | "IMAGE" | "VIDEO">("ALL");
   const [categoryFilter, setCategoryFilter] = useState<string>("ALL");
+  const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
+  const [isSelectionMode, setIsSelectionMode] = useState(false);
 
   // Multi-upload state
   const [queue, setQueue] = useState<UploadQueueItem[]>([]);
@@ -268,6 +270,38 @@ export default function GalleryClient({ initialItems }: GalleryClientProps) {
     }
   };
 
+  const handleBulkDelete = async () => {
+    if (selectedIds.size === 0) return;
+    if (!confirm(`Are you sure you want to delete ${selectedIds.size} selected items?`)) return;
+
+    setDeleting(true);
+    try {
+      const res = await deleteMultipleGalleryItems(Array.from(selectedIds));
+      if (res.error) {
+        toast.error(res.error);
+      } else {
+        toast.success(`Successfully deleted ${selectedIds.size} items.`);
+        setSelectedIds(new Set());
+        setIsSelectionMode(false);
+        router.refresh();
+      }
+    } catch {
+      toast.error("Failed to delete selected items");
+    } finally {
+      setDeleting(false);
+    }
+  };
+
+  const toggleSelection = (id: string) => {
+    const next = new Set(selectedIds);
+    if (next.has(id)) {
+      next.delete(id);
+    } else {
+      next.add(id);
+    }
+    setSelectedIds(next);
+  };
+
   return (
     <div className="space-y-8">
       {/* Top Header */}
@@ -281,7 +315,31 @@ export default function GalleryClient({ initialItems }: GalleryClientProps) {
             Multi-file drag &amp; drop uploader for campus photos, videos, and YouTube features
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap items-center gap-3">
+          {isSelectionMode && selectedIds.size > 0 && (
+            <button
+              onClick={handleBulkDelete}
+              disabled={deleting}
+              className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center gap-2 cursor-pointer disabled:opacity-50"
+            >
+              <Trash2 className="w-4 h-4" />
+              <span>Delete Selected ({selectedIds.size})</span>
+            </button>
+          )}
+          
+          <button
+            onClick={() => {
+              setIsSelectionMode(!isSelectionMode);
+              if (isSelectionMode) setSelectedIds(new Set());
+            }}
+            className={`px-4 py-2.5 rounded-xl text-xs font-bold shadow-sm transition-all flex items-center gap-2 cursor-pointer border ${
+              isSelectionMode ? 'bg-blue-100 text-blue-900 border-blue-200' : 'bg-white border-gray-200 text-gray-700 hover:text-blue-900'
+            }`}
+          >
+            <CheckCircle2 className="w-4 h-4" />
+            <span>{isSelectionMode ? "Cancel Selection" : "Select Multiple"}</span>
+          </button>
+
           <button
             onClick={() => setIsYoutubeModalOpen(true)}
             className="px-4 py-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl text-xs font-bold shadow-sm transition-all flex items-center gap-2 cursor-pointer"
@@ -521,7 +579,12 @@ export default function GalleryClient({ initialItems }: GalleryClientProps) {
           {filteredItems.map((item) => (
             <div
               key={item.id}
-              className="group bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col relative"
+              onClick={() => isSelectionMode && toggleSelection(item.id)}
+              className={`group bg-white rounded-2xl border ${
+                selectedIds.has(item.id) ? 'border-blue-500 ring-2 ring-blue-500/20' : 'border-gray-200'
+              } overflow-hidden shadow-sm hover:shadow-md transition-all flex flex-col relative ${
+                isSelectionMode ? 'cursor-pointer' : ''
+              }`}
             >
               {/* Media Preview Box */}
               <div className="relative aspect-video w-full bg-slate-100 overflow-hidden">
@@ -567,14 +630,30 @@ export default function GalleryClient({ initialItems }: GalleryClientProps) {
                   </span>
                 </div>
 
-                {/* Delete button hover overlay */}
-                <button
-                  onClick={() => setDeleteTarget(item)}
-                  className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700 shadow-md cursor-pointer"
-                  title="Delete media"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
+                {/* Selection Checkbox (when in selection mode) */}
+                {isSelectionMode && (
+                  <div className="absolute top-2 right-2 z-10">
+                    <div className={`w-6 h-6 rounded-md flex items-center justify-center border-2 ${
+                      selectedIds.has(item.id) ? 'bg-blue-600 border-blue-600 text-white' : 'bg-white/80 border-gray-300 text-transparent'
+                    }`}>
+                      <CheckCircle2 className="w-4 h-4" />
+                    </div>
+                  </div>
+                )}
+
+                {/* Delete button hover overlay (only when not in selection mode) */}
+                {!isSelectionMode && (
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setDeleteTarget(item);
+                    }}
+                    className="absolute top-2 right-2 p-1.5 bg-red-600 text-white rounded-lg opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-700 shadow-md cursor-pointer z-10"
+                    title="Delete media"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                )}
               </div>
 
               {/* Title & Category caption */}

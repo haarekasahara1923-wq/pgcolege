@@ -13,6 +13,14 @@ export async function updateAboutContent(formData: {
   mission: string;
   imageUrl?: string;
   imagePublicId?: string;
+  directorName?: string;
+  directorMessage?: string;
+  directorImageUrl?: string;
+  directorImageId?: string;
+  principalName?: string;
+  principalMessage?: string;
+  principalImageUrl?: string;
+  principalImageId?: string;
 }) {
   await requireSession();
 
@@ -21,7 +29,7 @@ export async function updateAboutContent(formData: {
     return { error: parsed.error.issues[0]?.message || "Invalid about content" };
   }
 
-  const { title, description, vision, mission } = parsed.data;
+  const { title, description, vision, mission, directorName, directorMessage, principalName, principalMessage } = parsed.data;
 
   try {
     const existing = await prisma.aboutContent.findFirst();
@@ -32,6 +40,22 @@ export async function updateAboutContent(formData: {
       formData.imagePublicId !== existing.imagePublicId
     ) {
       await deleteCloudinaryAsset(existing.imagePublicId, "image");
+    }
+
+    if (
+      formData.directorImageId &&
+      existing?.directorImageId &&
+      formData.directorImageId !== existing.directorImageId
+    ) {
+      await deleteCloudinaryAsset(existing.directorImageId, "image");
+    }
+
+    if (
+      formData.principalImageId &&
+      existing?.principalImageId &&
+      formData.principalImageId !== existing.principalImageId
+    ) {
+      await deleteCloudinaryAsset(existing.principalImageId, "image");
     }
 
     let updated;
@@ -48,6 +72,14 @@ export async function updateAboutContent(formData: {
             formData.imagePublicId !== undefined
               ? formData.imagePublicId
               : existing.imagePublicId,
+          directorName: directorName !== undefined ? directorName : existing.directorName,
+          directorMessage: directorMessage !== undefined ? directorMessage : existing.directorMessage,
+          directorImageUrl: formData.directorImageUrl !== undefined ? formData.directorImageUrl : existing.directorImageUrl,
+          directorImageId: formData.directorImageId !== undefined ? formData.directorImageId : existing.directorImageId,
+          principalName: principalName !== undefined ? principalName : existing.principalName,
+          principalMessage: principalMessage !== undefined ? principalMessage : existing.principalMessage,
+          principalImageUrl: formData.principalImageUrl !== undefined ? formData.principalImageUrl : existing.principalImageUrl,
+          principalImageId: formData.principalImageId !== undefined ? formData.principalImageId : existing.principalImageId,
         },
       });
     } else {
@@ -59,6 +91,14 @@ export async function updateAboutContent(formData: {
           mission,
           imageUrl: formData.imageUrl || null,
           imagePublicId: formData.imagePublicId || null,
+          directorName: directorName || null,
+          directorMessage: directorMessage || null,
+          directorImageUrl: formData.directorImageUrl || null,
+          directorImageId: formData.directorImageId || null,
+          principalName: principalName || null,
+          principalMessage: principalMessage || null,
+          principalImageUrl: formData.principalImageUrl || null,
+          principalImageId: formData.principalImageId || null,
         },
       });
     }

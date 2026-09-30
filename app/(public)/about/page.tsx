@@ -115,6 +115,78 @@ export default async function AboutPage() {
             </div>
           )}
         </div>
+
+        {/* Leadership Messages */}
+        {(about.directorMessage || about.principalMessage) && (
+          <div className="mt-16 sm:mt-24">
+            <div className="text-center mb-12">
+              <span className="text-xs font-black uppercase tracking-wider text-blue-900">
+                Our Leadership
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight mt-1">
+                Messages from the Leaders
+              </h2>
+            </div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+              {about.directorMessage && (
+                <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-xl shadow-blue-900/5 relative">
+                  <div className="absolute -top-6 -right-6 text-blue-50">
+                    <svg className="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" /></svg>
+                  </div>
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-4 mb-6">
+                      {about.directorImageUrl ? (
+                        <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-blue-100 relative">
+                          <Image src={about.directorImageUrl} alt={about.directorName || "Director"} fill className="object-cover" />
+                        </div>
+                      ) : (
+                        <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center text-blue-900 font-bold text-xl">
+                          {(about.directorName || "D").charAt(0)}
+                        </div>
+                      )}
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900">{about.directorName || "Director"}</h3>
+                        <p className="text-sm font-semibold text-blue-600">Director</p>
+                      </div>
+                    </div>
+                    <p className="text-gray-600 text-base leading-relaxed whitespace-pre-wrap italic">
+                      "{about.directorMessage}"
+                    </p>
+                  </div>
+                </div>
+              )}
+              
+              {about.principalMessage && (
+                <div className="bg-white rounded-3xl p-8 border border-gray-100 shadow-xl shadow-amber-900/5 relative">
+                  <div className="absolute -top-6 -right-6 text-amber-50">
+                    <svg className="w-32 h-32" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" /></svg>
+                  </div>
+                  <div className="relative z-10">
+                    <div className="flex items-center gap-4 mb-6">
+                      {about.principalImageUrl ? (
+                        <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-amber-100 relative">
+                          <Image src={about.principalImageUrl} alt={about.principalName || "Principal"} fill className="object-cover" />
+                        </div>
+                      ) : (
+                        <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center text-amber-900 font-bold text-xl">
+                          {(about.principalName || "P").charAt(0)}
+                        </div>
+                      )}
+                      <div>
+                        <h3 className="text-xl font-bold text-gray-900">{about.principalName || "Principal"}</h3>
+                        <p className="text-sm font-semibold text-amber-600">Principal</p>
+                      </div>
+                    </div>
+                    <p className="text-gray-600 text-base leading-relaxed whitespace-pre-wrap italic">
+                      "{about.principalMessage}"
+                    </p>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        )}
       </section>
     </div>
   );
