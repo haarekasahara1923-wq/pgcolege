@@ -37,7 +37,7 @@ export default async function PublicLayout({ children }: { children: React.React
   return (
     <>
       <AutoRefresh />
-      <Navbar />
+      <Navbar logoUrl={contact?.logoUrl} />
       <main className="pt-20 min-h-screen">{children}</main>
       <Footer contact={contact} />
       <WhatsAppButton

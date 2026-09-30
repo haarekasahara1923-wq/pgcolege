@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import {
   GraduationCap,
@@ -33,9 +34,10 @@ const navItems = [
 
 interface AdminSidebarProps {
   email: string;
+  logoUrl?: string | null;
 }
 
-export default function AdminSidebar({ email }: AdminSidebarProps) {
+export default function AdminSidebar({ email, logoUrl }: AdminSidebarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
 
@@ -52,9 +54,21 @@ export default function AdminSidebar({ email }: AdminSidebarProps) {
       {/* Brand Header */}
       <div className="p-6 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 bg-yellow-400 rounded-xl flex items-center justify-center shadow-md shadow-yellow-400/20 shrink-0">
-            <GraduationCap className="w-6 h-6 text-blue-950" />
-          </div>
+          {logoUrl ? (
+            <div className="w-12 h-12 relative rounded-lg bg-white overflow-hidden shadow-md shrink-0 flex items-center justify-center p-1">
+              <Image
+                src={logoUrl}
+                alt="Admin Logo"
+                width={512}
+                height={512}
+                className="w-full h-full object-contain"
+              />
+            </div>
+          ) : (
+            <div className="w-10 h-10 bg-yellow-400 rounded-xl flex items-center justify-center shadow-md shadow-yellow-400/20 shrink-0">
+              <GraduationCap className="w-6 h-6 text-blue-950" />
+            </div>
+          )}
           <div className="overflow-hidden">
             <div className="text-white font-bold text-sm leading-tight truncate">
               Prathvi Group
@@ -128,9 +142,15 @@ export default function AdminSidebar({ email }: AdminSidebarProps) {
       {/* Mobile Top Bar */}
       <div className="lg:hidden fixed top-0 left-0 right-0 h-16 bg-blue-950 border-b border-white/10 z-30 px-4 flex items-center justify-between shadow-md">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 bg-yellow-400 rounded-lg flex items-center justify-center">
-            <GraduationCap className="w-5 h-5 text-blue-950" />
-          </div>
+          {logoUrl ? (
+            <div className="w-9 h-9 relative bg-white rounded-lg flex items-center justify-center p-1">
+              <Image src={logoUrl} alt="Logo" width={512} height={512} className="w-full h-full object-contain" />
+            </div>
+          ) : (
+            <div className="w-8 h-8 bg-yellow-400 rounded-lg flex items-center justify-center">
+              <GraduationCap className="w-5 h-5 text-blue-950" />
+            </div>
+          )}
           <span className="text-white font-bold text-sm">Prathvi Admin</span>
         </div>
         <button

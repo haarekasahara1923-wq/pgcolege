@@ -78,6 +78,8 @@ model ContactDetails {
   youtube          String?
   twitter          String?
   linkedin         String?
+  logoUrl          String?
+  logoPublicId     String?
   updatedAt        DateTime @updatedAt
 }
 

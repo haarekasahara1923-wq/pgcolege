@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { GraduationCap, MapPin, Phone, Mail } from "lucide-react";
 
 // Inline SVG social icons (lucide-react v1.49 doesn't export social brand icons)
@@ -47,6 +48,7 @@ interface ContactDetails {
   youtube?: string | null;
   twitter?: string | null;
   linkedin?: string | null;
+  logoUrl?: string | null;
 }
 
 interface FooterProps {
@@ -63,9 +65,21 @@ export default function Footer({ contact }: FooterProps) {
           {/* Brand */}
           <div className="lg:col-span-1">
             <Link href="/" className="flex items-center gap-3 mb-4 group">
-              <div className="w-10 h-10 rounded-xl bg-yellow-400 flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-blue-900" />
-              </div>
+              {contact?.logoUrl ? (
+                <div className="w-12 h-12 relative rounded-lg bg-white overflow-hidden shadow-sm flex items-center justify-center p-1 group-hover:scale-105 transition-transform duration-300">
+                  <Image
+                    src={contact.logoUrl}
+                    alt="Prathvi Group of College Logo"
+                    width={512}
+                    height={512}
+                    className="w-full h-full object-contain"
+                  />
+                </div>
+              ) : (
+                <div className="w-10 h-10 rounded-xl bg-yellow-400 flex items-center justify-center">
+                  <GraduationCap className="w-6 h-6 text-blue-900" />
+                </div>
+              )}
               <div>
                 <div className="font-bold text-sm">Prathvi Group</div>
                 <div className="text-yellow-400 text-xs font-semibold">of College</div>

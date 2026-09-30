@@ -3,6 +3,7 @@
 import { prisma } from "@/lib/db";
 import { requireSession } from "@/lib/auth";
 import { contactSchema } from "@/lib/validators";
+import { deleteCloudinaryAsset } from "@/lib/cloudinary";
 import { revalidatePath } from "next/cache";
 
 export async function updateContactDetails(formData: {
@@ -18,6 +19,8 @@ export async function updateContactDetails(formData: {
   youtube?: string;
   twitter?: string;
   linkedin?: string;
+  logoUrl?: string;
+  logoPublicId?: string;
 }) {
   await requireSession();
 
@@ -30,6 +33,14 @@ export async function updateContactDetails(formData: {
 
   try {
     const existing = await prisma.contactDetails.findFirst();
+
+    if (
+      formData.logoPublicId &&
+      existing?.logoPublicId &&
+      formData.logoPublicId !== existing.logoPublicId
+    ) {
+      await deleteCloudinaryAsset(existing.logoPublicId, "image");
+    }
 
     let updated;
     if (existing) {
@@ -48,6 +59,8 @@ export async function updateContactDetails(formData: {
           youtube: data.youtube || null,
           twitter: data.twitter || null,
           linkedin: data.linkedin || null,
+          logoUrl: formData.logoUrl !== undefined ? formData.logoUrl : existing.logoUrl,
+          logoPublicId: formData.logoPublicId !== undefined ? formData.logoPublicId : existing.logoPublicId,
         },
       });
     } else {
@@ -65,6 +78,8 @@ export async function updateContactDetails(formData: {
           youtube: data.youtube || null,
           twitter: data.twitter || null,
           linkedin: data.linkedin || null,
+          logoUrl: formData.logoUrl || null,
+          logoPublicId: formData.logoPublicId || null,
         },
       });
     }

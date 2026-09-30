@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 import { GraduationCap, Menu, X, ArrowRight } from "lucide-react";
 
 const NAV_LINKS = [
@@ -13,7 +14,11 @@ const NAV_LINKS = [
   { href: "/contact", label: "Contact Us" },
 ];
 
-export default function Navbar() {
+interface NavbarProps {
+  logoUrl?: string | null;
+}
+
+export default function Navbar({ logoUrl }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
@@ -38,9 +43,22 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-20">
           {/* Brand Logo */}
           <Link href="/" className="flex items-center gap-3.5 group">
-            <div className="w-11 h-11 rounded-2xl bg-yellow-400 flex items-center justify-center shadow-md shadow-yellow-400/20 group-hover:scale-105 transition-transform duration-300">
-              <GraduationCap className="w-6 h-6 text-blue-950" />
-            </div>
+            {logoUrl ? (
+              <div className="w-11 h-11 relative rounded-lg overflow-hidden bg-white shadow-md group-hover:scale-105 transition-transform duration-300 flex items-center justify-center p-1">
+                <Image
+                  src={logoUrl}
+                  alt="Prathvi Group of College Logo"
+                  width={512}
+                  height={512}
+                  className="w-full h-full object-contain"
+                  priority
+                />
+              </div>
+            ) : (
+              <div className="w-11 h-11 rounded-2xl bg-yellow-400 flex items-center justify-center shadow-md shadow-yellow-400/20 group-hover:scale-105 transition-transform duration-300">
+                <GraduationCap className="w-6 h-6 text-blue-950" />
+              </div>
+            )}
             <div>
               <div className="text-white font-black tracking-tight text-lg leading-tight group-hover:text-yellow-400 transition-colors">
                 Prathvi Group

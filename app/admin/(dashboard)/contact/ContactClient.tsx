@@ -14,7 +14,10 @@ import {
   Loader2,
   Eye,
   CheckCircle2,
+  Image as ImageIcon,
+  Upload,
 } from "lucide-react";
+import Image from "next/image";
 import { toast } from "sonner";
 import { updateContactDetails } from "@/actions/contact-actions";
 
@@ -32,6 +35,8 @@ interface ContactDetailsItem {
   youtube: string | null;
   twitter: string | null;
   linkedin: string | null;
+  logoUrl: string | null;
+  logoPublicId: string | null;
   updatedAt: Date;
 }
 
@@ -71,7 +76,70 @@ export default function ContactClient({ initialContact }: ContactClientProps) {
   const [twitter, setTwitter] = useState(initialContact?.twitter || "");
   const [linkedin, setLinkedin] = useState(initialContact?.linkedin || "");
 
+  const [currentLogoUrl, setCurrentLogoUrl] = useState<string | null>(initialContact?.logoUrl || null);
+  const [currentLogoPublicId, setCurrentLogoPublicId] = useState<string | null>(initialContact?.logoPublicId || null);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  const [logoPreview, setLogoPreview] = useState<string | null>(null);
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+
   const [submitting, setSubmitting] = useState(false);
+
+  const handleLogoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload an image file (JPG, PNG, WebP)");
+      return;
+    }
+
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("Logo file size should be less than 2MB");
+      return;
+    }
+
+    setLogoFile(file);
+    setLogoPreview(URL.createObjectURL(file));
+  };
+
+  const uploadToCloudinary = async (file: File): Promise<{ url: string; publicId: string }> => {
+    setUploadProgress(15);
+    const sigRes = await fetch("/api/upload-signature", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ folder: "prathi/site" }),
+    });
+
+    if (!sigRes.ok) {
+      throw new Error("Could not acquire Cloudinary signature");
+    }
+
+    const { signature, timestamp, cloudName, apiKey, folder } = await sigRes.json();
+    setUploadProgress(40);
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("api_key", apiKey);
+    formData.append("timestamp", timestamp.toString());
+    formData.append("signature", signature);
+    formData.append("folder", folder);
+
+    const uploadRes = await fetch(
+      `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+      {
+        method: "POST",
+        body: formData,
+      }
+    );
+
+    if (!uploadRes.ok) {
+      throw new Error("Cloudinary upload failed");
+    }
+
+    setUploadProgress(95);
+    const data = await uploadRes.json();
+    return { url: data.secure_url, publicId: data.public_id };
+  };
 
   // Phone handlers
   const addPhone = () => setPhones([...phones, ""]);
@@ -118,6 +186,16 @@ export default function ContactClient({ initialContact }: ContactClientProps) {
 
     setSubmitting(true);
     try {
+      let finalLogoUrl = currentLogoUrl;
+      let finalLogoPublicId = currentLogoPublicId;
+
+      if (logoFile) {
+        toast.info("Uploading logo...");
+        const uploaded = await uploadToCloudinary(logoFile);
+        finalLogoUrl = uploaded.url;
+        finalLogoPublicId = uploaded.publicId;
+      }
+
       const res = await updateContactDetails({
         address: address.trim(),
         phones: validPhones,
@@ -131,20 +209,27 @@ export default function ContactClient({ initialContact }: ContactClientProps) {
         youtube: youtube.trim() || undefined,
         twitter: twitter.trim() || undefined,
         linkedin: linkedin.trim() || undefined,
+        logoUrl: finalLogoUrl || undefined,
+        logoPublicId: finalLogoPublicId || undefined,
       });
 
       if (res.error) {
         toast.error(res.error);
       } else {
         toast.success(
-          "Contact details & WhatsApp settings updated successfully! Visible on public site."
+          "Contact details & Logo updated successfully! Visible on public site."
         );
+        if (finalLogoUrl) setCurrentLogoUrl(finalLogoUrl);
+        if (finalLogoPublicId) setCurrentLogoPublicId(finalLogoPublicId);
+        setLogoFile(null);
+        setLogoPreview(null);
         router.refresh();
       }
     } catch {
       toast.error("Failed to update contact details. Please try again.");
     } finally {
       setSubmitting(false);
+      setUploadProgress(null);
     }
   };
 
@@ -174,8 +259,70 @@ export default function ContactClient({ initialContact }: ContactClientProps) {
 
       <div className="bg-white rounded-3xl border border-gray-200 shadow-sm p-6 sm:p-8">
         <form onSubmit={handleSubmit} className="space-y-8 max-w-4xl">
-          {/* Section 1: Campus Address & Hours */}
+          {/* Section 1: Logo Upload */}
           <div className="space-y-4">
+            <h2 className="text-base font-extrabold text-blue-950 flex items-center gap-2 border-b border-gray-100 pb-2">
+              <ImageIcon className="w-5 h-5 text-blue-900" />
+              <span>Site Logo (512x512px recommended)</span>
+            </h2>
+
+            <div className="flex flex-col sm:flex-row gap-6 items-start">
+              <div className="w-full sm:w-1/3">
+                <label className="block text-xs font-bold uppercase tracking-wider text-gray-700 mb-1.5">
+                  Current Logo
+                </label>
+                {(logoPreview || currentLogoUrl) ? (
+                  <div className="relative w-32 h-32 rounded-2xl overflow-hidden border border-gray-200 bg-white shadow-sm flex items-center justify-center p-2">
+                    <Image
+                      src={logoPreview || currentLogoUrl!}
+                      alt="Site Logo"
+                      fill
+                      className="object-contain p-2"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-32 h-32 rounded-2xl border-2 border-dashed border-gray-200 bg-slate-50 flex flex-col items-center justify-center text-gray-400">
+                    <ImageIcon className="w-8 h-8 mb-2 opacity-50" />
+                    <span className="text-xs font-medium">No Logo</span>
+                  </div>
+                )}
+              </div>
+              <div className="w-full sm:w-2/3">
+                <label className="flex flex-col items-center justify-center p-5 border-2 border-dashed border-gray-200 hover:border-blue-500 rounded-2xl cursor-pointer bg-slate-50/50 hover:bg-blue-50/30 transition-all">
+                  <Upload className="w-6 h-6 text-gray-400 mb-1" />
+                  <span className="text-xs font-bold text-gray-700 text-center">
+                    {logoFile ? logoFile.name : "Select or change site logo"}
+                  </span>
+                  <span className="text-[11px] text-gray-400 mt-0.5 text-center">
+                    Recommended size: 512x512px. JPG, PNG, WebP up to 2MB
+                  </span>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleLogoChange}
+                    className="hidden"
+                  />
+                </label>
+                {uploadProgress !== null && (
+                  <div className="mt-2 space-y-1 w-full">
+                    <div className="flex justify-between text-xs text-blue-900 font-bold">
+                      <span>Uploading logo...</span>
+                      <span>{uploadProgress}%</span>
+                    </div>
+                    <div className="w-full h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                      <div
+                        className="h-full bg-blue-600 transition-all duration-200"
+                        style={{ width: `${uploadProgress}%` }}
+                      />
+                    </div>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Section 2: Campus Address & Hours */}
+          <div className="space-y-4 pt-4 border-t border-gray-100">
             <h2 className="text-base font-extrabold text-blue-950 flex items-center gap-2 border-b border-gray-100 pb-2">
               <MapPin className="w-5 h-5 text-blue-900" />
               <span>Campus Address & Schedule</span>
