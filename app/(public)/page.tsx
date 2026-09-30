@@ -69,17 +69,30 @@ export default async function HomePage() {
       />
 
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-gradient-to-br from-blue-950 via-blue-900 to-slate-950 text-white">
+      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden text-white">
+        {/* Background Image & Overlays */}
+        <div className="absolute inset-0 z-0">
+          <Image
+            src="/hero-bg.jpg"
+            alt="Prathvi Group of College Campus"
+            fill
+            priority
+            className="object-cover object-center scale-105 animate-[pulse_30s_ease-in-out_infinite_alternate]"
+            quality={90}
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-950/85 via-slate-900/80 to-blue-950/95" />
+        </div>
+
         {/* Decorative Grid and Lighting */}
         <div
-          className="absolute inset-0 opacity-15"
+          className="absolute inset-0 opacity-15 z-0"
           style={{
             backgroundImage: "radial-gradient(circle at 1.5px 1.5px, #facc15 1px, transparent 0)",
             backgroundSize: "36px 36px",
           }}
         />
-        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-blue-600/20 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-10 -right-20 w-96 h-96 bg-yellow-400/15 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-1/4 -left-20 w-96 h-96 bg-blue-600/30 rounded-full blur-3xl pointer-events-none z-0" />
+        <div className="absolute bottom-10 -right-20 w-96 h-96 bg-yellow-400/20 rounded-full blur-3xl pointer-events-none z-0" />
 
         <div className="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-20 text-center">
           <div className="inline-flex items-center gap-2.5 bg-white/10 backdrop-blur-md border border-white/20 rounded-full px-5 py-2 mb-8 shadow-inner">
