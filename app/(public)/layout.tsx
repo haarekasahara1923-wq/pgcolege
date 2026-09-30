@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { prisma } from "@/lib/db";
 import Navbar from "@/components/public/Navbar";
 import Footer from "@/components/public/Footer";
+import BottomNav from "@/components/public/BottomNav";
 import WhatsAppButton from "@/components/public/WhatsAppButton";
 import AutoRefresh from "@/components/public/AutoRefresh";
 
@@ -38,8 +39,9 @@ export default async function PublicLayout({ children }: { children: React.React
     <>
       <AutoRefresh />
       <Navbar logoUrl={contact?.logoUrl} />
-      <main className="pt-20 min-h-screen">{children}</main>
+      <main className="pt-20 pb-16 lg:pb-0 min-h-screen overflow-x-hidden">{children}</main>
       <Footer contact={contact} />
+      <BottomNav />
       <WhatsAppButton
         whatsappNumber={contact?.whatsappNumber ?? undefined}
         greeting={contact?.whatsappGreeting}

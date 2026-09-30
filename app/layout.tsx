@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { Toaster } from "sonner";
 import "./globals.css";
 
@@ -18,6 +18,14 @@ export const metadata: Metadata = {
     title: "Prathvi Group of College | Gwalior, Madhya Pradesh",
     description: "Premier educational institution in Gwalior, MP offering professional degree courses.",
   },
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Prathvi Group",
+  },
+  formatDetection: {
+    telephone: false,
+  },
 };
 
 export default function RootLayout({
@@ -30,8 +38,9 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <meta name="theme-color" content="#172554" />
       </head>
-      <body>
+      <body className="overflow-x-hidden bg-slate-50">
         {children}
         <Toaster position="top-right" richColors />
       </body>
