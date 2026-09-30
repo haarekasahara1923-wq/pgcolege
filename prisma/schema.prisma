@@ -1,0 +1,138 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model College {
+  id            String    @id @default(cuid())
+  name          String
+  slug          String    @unique
+  description   String
+  imageUrl      String?
+  imagePublicId String?
+  address       String?
+  order         Int       @default(0)
+  isActive      Boolean   @default(true)
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  courses       Course[]
+  enquiries     Enquiry[]
+
+  @@index([slug])
+  @@index([order])
+  @@index([isActive])
+}
+
+model Course {
+  id          String    @id @default(cuid())
+  collegeId   String
+  college     College   @relation(fields: [collegeId], references: [id], onDelete: Cascade)
+  name        String
+  duration    String
+  description String?
+  eligibility String?
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  enquiries   Enquiry[]
+
+  @@index([collegeId])
+  @@index([order])
+}
+
+model AboutContent {
+  id            String    @id @default(cuid())
+  title         String    @default("About Us")
+  description   String    @default("")
+  vision        String    @default("")
+  mission       String    @default("")
+  imageUrl      String?
+  imagePublicId String?
+  updatedAt     DateTime  @updatedAt
+}
+
+model ContactDetails {
+  id               String   @id @default(cuid())
+  address          String   @default("")
+  phones           String[] @default([])
+  emails           String[] @default([])
+  whatsappNumber   String?
+  whatsappGreeting String   @default("Hello Prathvi Group of College, I would like to know more about your courses.")
+  workingHours     String   @default("")
+  mapEmbedUrl      String?
+  facebook         String?
+  instagram        String?
+  youtube          String?
+  twitter          String?
+  linkedin         String?
+  updatedAt        DateTime @updatedAt
+}
+
+enum GalleryType {
+  IMAGE
+  VIDEO
+}
+
+model GalleryItem {
+  id         String      @id @default(cuid())
+  type       GalleryType @default(IMAGE)
+  url        String
+  publicId   String?
+  youtubeUrl String?
+  title      String?
+  category   String?
+  order      Int         @default(0)
+  createdAt  DateTime    @default(now())
+
+  @@index([type])
+  @@index([order])
+  @@index([createdAt])
+}
+
+enum EnquirySource {
+  FORM
+  WHATSAPP
+}
+
+enum EnquiryStatus {
+  NEW
+  CONTACTED
+  CLOSED
+}
+
+model Enquiry {
+  id          String        @id @default(cuid())
+  name        String
+  phone       String
+  email       String?
+  collegeId   String?
+  college     College?      @relation(fields: [collegeId], references: [id], onDelete: SetNull)
+  courseId    String?
+  course      Course?       @relation(fields: [courseId], references: [id], onDelete: SetNull)
+  collegeName String?
+  courseName  String?
+  message     String
+  source      EnquirySource @default(FORM)
+  status      EnquiryStatus @default(NEW)
+  adminNote   String?
+  ipAddress   String?
+  createdAt   DateTime      @default(now())
+
+  @@index([status])
+  @@index([source])
+  @@index([createdAt])
+  @@index([collegeId])
+  @@index([courseId])
+}
+
+model Admin {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}

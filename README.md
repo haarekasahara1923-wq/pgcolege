@@ -1,36 +1,86 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Prathvi Group of College - Official Website
 
-## Getting Started
+This is a complete, production-ready, fully responsive Next.js web application for "Prathvi Group of College". It includes a dynamic public-facing website and a comprehensive, secure admin panel.
 
-First, run the development server:
+## Technology Stack
+- **Framework:** Next.js (App Router, Server Actions)
+- **Styling:** Tailwind CSS + Lucide React Icons
+- **Database:** PostgreSQL (Neon Serverless Postgres)
+- **ORM:** Prisma Client
+- **Image/Video Hosting:** Cloudinary
+- **Authentication:** Custom JWT-based stateless auth
+- **Deployment:** Vercel (Recommended)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## Project Structure
+- `app/(public)`: All public-facing routes (Home, About, Colleges, Gallery, Contact)
+- `app/admin`: The secure admin dashboard and CRUD interfaces
+- `app/api`: Edge API routes (including rate-limited enquiry submission)
+- `components/`: Reusable React components (UI, Admin, Public)
+- `lib/`: Utility functions, Prisma configuration, schema validation (Zod), and Cloudinary integrations
+- `actions/`: Next.js Server Actions for secure database mutations
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Features Implemented
+- **Dynamic Content:** Admin can add/edit Colleges, Courses, Gallery Items (Images/Videos), About details, and Contact information.
+- **Enquiry System:** User inquiries are captured and rate-limited. Admins can track status and leave notes.
+- **Media Optimization:** Direct-to-Cloudinary upload ensures media is optimized and doesn't rely on the server filesystem.
+- **Responsive Aesthetics:** Premium dynamic design utilizing modern micro-animations, gradients, and proper layout techniques.
+- **SEO Optimized:** Metadata, sitemap generation, and clean semantic markup.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Setup Instructions (Local)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-## Learn More
+2. **Environment Variables:**
+   Create a `.env` file in the root directory based on `.env.example`:
+   ```env
+   # PostgreSQL Database (Neon)
+   DATABASE_URL="your-neon-pooling-url"
+   DIRECT_URL="your-neon-direct-url"
 
-To learn more about Next.js, take a look at the following resources:
+   # Cloudinary
+   CLOUDINARY_CLOUD_NAME="your-cloud-name"
+   CLOUDINARY_API_KEY="your-api-key"
+   CLOUDINARY_API_SECRET="your-api-secret"
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+   # Admin Auth
+   JWT_SECRET="generate-a-secure-random-string"
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. **Database Setup:**
+   Generate Prisma client and push the schema to your Neon database:
+   ```bash
+   npx prisma generate
+   npx prisma db push
+   ```
+   *(Optional)* Run the seed script to create the initial admin user and default content:
+   ```bash
+   npx ts-node prisma/seed.ts
+   ```
 
-## Deploy on Vercel
+4. **Run the Development Server:**
+   ```bash
+   npm run dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Deployment Instructions (Vercel)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+This application is fully optimized for deployment on Vercel.
+
+1. **Push your code to GitHub/GitLab/Bitbucket.**
+2. **Import the repository into Vercel.**
+3. **Configure Environment Variables:**
+   In the Vercel project settings, add all the environment variables listed in your `.env` file (`DATABASE_URL`, `DIRECT_URL`, `CLOUDINARY_CLOUD_NAME`, `CLOUDINARY_API_KEY`, `CLOUDINARY_API_SECRET`, `JWT_SECRET`).
+4. **Deploy:**
+   Vercel will automatically detect Next.js.
+   - Build Command: `prisma generate && next build`
+   - Install Command: `npm install`
+5. **Post-Deployment:**
+   - Once deployed, you can access the admin panel at `your-domain.com/admin/login`.
+   - The default admin credentials (if you ran the seed script) are `admin@prathvi.edu.in` / `Prathvi@2024`. **Change the password immediately.**
+
+## Production Notes
+- **Serverless Environment:** This app writes no files to the local disk. Media uploads go directly from the client to Cloudinary via signed URLs, ensuring full compatibility with Vercel's serverless architecture.
+- **Caching & Revalidation:** Next.js caching is utilized heavily. Server actions call `revalidatePath` and `revalidateTag` to instantly update the public site when an admin makes changes.
