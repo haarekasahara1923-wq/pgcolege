@@ -59,11 +59,11 @@ export default function Navbar({ logoUrl }: NavbarProps) {
                 <GraduationCap className="w-6 h-6 text-blue-950" />
               </div>
             )}
-            <div className="flex flex-col w-max">
-              <span className="text-white font-black tracking-[0.2em] text-2xl leading-none group-hover:text-yellow-400 transition-colors uppercase">
+            <div className="flex flex-col items-center justify-center w-max">
+              <span className="text-white font-black tracking-[0.35em] text-2xl leading-none group-hover:text-yellow-400 transition-colors uppercase pl-[0.35em]">
                 PRATHVI
               </span>
-              <span className="text-yellow-400 font-bold text-[10px] uppercase leading-none mt-1" style={{ textAlignLast: "justify" }}>
+              <span className="text-yellow-400 font-bold text-[13px] tracking-wider uppercase leading-none mt-1.5">
                 Group of College
               </span>
             </div>

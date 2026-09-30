@@ -80,11 +80,11 @@ export default function Footer({ contact }: FooterProps) {
                   <GraduationCap className="w-6 h-6 text-blue-900" />
                 </div>
               )}
-              <div className="flex flex-col w-max">
-                <span className="font-black tracking-[0.2em] text-xl leading-none uppercase">
+              <div className="flex flex-col items-center justify-center w-max">
+                <span className="font-black tracking-[0.35em] text-xl leading-none uppercase pl-[0.35em]">
                   PRATHVI
                 </span>
-                <span className="text-yellow-400 font-bold text-[9px] uppercase leading-none mt-1" style={{ textAlignLast: "justify" }}>
+                <span className="text-yellow-400 font-bold text-[11px] tracking-wider uppercase leading-none mt-1.5">
                   Group of College
                 </span>
               </div>
