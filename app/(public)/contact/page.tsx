@@ -81,7 +81,7 @@ export default async function ContactPage() {
       {/* Hero */}
       <section className="relative py-16 px-4 text-center text-white overflow-hidden">
         <div className="absolute inset-0 z-0">
-          <Image src="https://images.unsplash.com/photo-1557200134-90327ee9fafa?q=80&w=2000&auto=format&fit=crop" alt="Contact Prathvi Group" fill className="object-cover object-center" priority />
+          <Image src="/contact-hero.jpg" alt="Contact Prathvi Group" fill className="object-cover object-center" priority />
           <div className="absolute inset-0 bg-gradient-to-br from-blue-950/90 via-blue-900/80 to-slate-900/90" />
         </div>
         <div className="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_center,_white_1px,_transparent_0)] bg-[size:32px_32px] z-0" />

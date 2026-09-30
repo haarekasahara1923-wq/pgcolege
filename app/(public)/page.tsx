@@ -337,13 +337,13 @@ export default async function HomePage() {
                     sizes="(max-width: 1024px) 100vw, 50vw"
                   />
                 ) : (
-                  <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-blue-900 to-blue-950 text-white p-8 text-center">
-                    <GraduationCap className="w-16 h-16 text-yellow-400 mb-3" />
-                    <h3 className="text-xl font-bold">Prathvi Group of College</h3>
-                    <p className="text-xs text-blue-200 mt-1 max-w-sm">
-                      Morar, Gwalior (Madhya Pradesh)
-                    </p>
-                  </div>
+                  <Image
+                    src="/about-snippet.jpg"
+                    alt="Prathvi Group of College"
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 1024px) 100vw, 50vw"
+                  />
                 )}
               </div>
             </div>
