@@ -151,17 +151,17 @@ export default function AffiliatesClient({ initialAffiliates }: { initialAffilia
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                   <div className="flex justify-end gap-2">
                     {!affiliate.isApproved && !affiliate.isBlocked && (
-                      <button onClick={() => approveAffiliate(affiliate.id)} className="text-green-600 hover:text-green-900" title="Approve & Set Commission">
-                        <Check className="w-5 h-5" />
+                      <button onClick={() => approveAffiliate(affiliate.id)} className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 text-sm flex items-center gap-1">
+                        <Check className="w-4 h-4" /> Approve & Commission
                       </button>
                     )}
                     {affiliate.isApproved && (
-                      <button onClick={() => generateWelcomeLetter(affiliate)} className="text-blue-600 hover:text-blue-900" title="Generate Welcome Letter (PDF)">
-                        <Download className="w-5 h-5" />
+                      <button onClick={() => generateWelcomeLetter(affiliate)} className="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700 text-sm flex items-center gap-1">
+                        <FileText className="w-4 h-4" /> Welcome Letter
                       </button>
                     )}
-                    <button onClick={() => toggleBlock(affiliate.id, affiliate.isBlocked)} className={`${affiliate.isBlocked ? 'text-gray-600' : 'text-red-600'} hover:text-red-900`} title={affiliate.isBlocked ? "Unblock" : "Block"}>
-                      {affiliate.isBlocked ? <Check className="w-5 h-5" /> : <Ban className="w-5 h-5" />}
+                    <button onClick={() => toggleBlock(affiliate.id, affiliate.isBlocked)} className={`px-3 py-1 rounded text-sm flex items-center gap-1 text-white ${affiliate.isBlocked ? 'bg-gray-600 hover:bg-gray-700' : 'bg-red-600 hover:bg-red-700'}`}>
+                      {affiliate.isBlocked ? <><Check className="w-4 h-4" /> Unblock</> : <><Ban className="w-4 h-4" /> Block</>}
                     </button>
                   </div>
                 </td>
