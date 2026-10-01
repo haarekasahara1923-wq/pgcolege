@@ -1,5 +1,5 @@
 import { NextResponse } from "react";
-import prisma from "@/lib/prisma";
+import { prisma } from "@/lib/db";
 
 export async function PUT(
   req: Request,
