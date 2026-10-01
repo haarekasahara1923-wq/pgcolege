@@ -89,12 +89,12 @@ export default function StudentForm({ affiliateId, affiliateCode, onCancel }: { 
         <div className="pt-4 mt-4 border-t border-gray-100">
           <h4 className="font-semibold text-gray-800 mb-4">Document Uploads (Optional)</h4>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {["aadharCardUrl", "panCardUrl", "aparIdUrl", "samagraIdUrl", "tenthMarksheetUrl", "twelfthMarksheetUrl", "graduationMarksheetUrl", "photoUrl"].map(doc => (
+            {["aadharCardUrl", "panCardUrl", "aparIdUrl", "samagraIdUrl", "casteCertificateUrl", "tenthMarksheetUrl", "twelfthMarksheetUrl", "graduationMarksheetUrl", "photoUrl"].map(doc => (
               <div key={doc} className="border p-3 rounded bg-gray-50 flex justify-between items-center">
-                <span className="text-xs font-medium text-gray-600">
-                  {doc.replace("Url", "").replace(/([A-Z])/g, ' $1').trim().toUpperCase()}
+                <span className="text-xs font-medium text-gray-600 truncate mr-2" title={doc === "casteCertificateUrl" ? "Caste Certificate (SC/ST/OBC)" : doc.replace("Url", "").replace(/([A-Z])/g, ' $1').trim().toUpperCase()}>
+                  {doc === "casteCertificateUrl" ? "CASTE CERT. (SC/ST/OBC)" : doc.replace("Url", "").replace(/([A-Z])/g, ' $1').trim().toUpperCase()}
                 </span>
-                <button type="button" onClick={() => handleSimulatedUpload(doc)} className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
+                <button type="button" onClick={() => handleSimulatedUpload(doc)} className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded shrink-0">
                   {docUrls[doc] ? 'Uploaded' : 'Upload'}
                 </button>
               </div>

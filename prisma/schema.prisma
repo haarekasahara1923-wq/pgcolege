@@ -194,6 +194,7 @@ model Student {
   panCardUrl              String?
   aparIdUrl               String?
   samagraIdUrl            String?
+  casteCertificateUrl     String?
   
   // Optional Academic Records
   tenthMarksheetUrl       String?

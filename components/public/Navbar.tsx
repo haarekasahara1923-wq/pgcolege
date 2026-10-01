@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Image from "next/image";
-import { GraduationCap, Menu, X, ArrowRight } from "lucide-react";
+import { GraduationCap, Menu, X, ArrowRight, Phone } from "lucide-react";
 
 const NAV_LINKS = [
   { href: "/", label: "Home" },
@@ -107,14 +107,24 @@ export default function Navbar({ logoUrl }: NavbarProps) {
             </a>
           </div>
 
-          {/* Mobile Menu Button */}
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden p-2 rounded-xl text-blue-100 hover:text-white hover:bg-white/10 focus:outline-none transition-colors"
-            aria-label="Toggle navigation menu"
-          >
-            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-          </button>
+          {/* Mobile Right Actions */}
+          <div className="lg:hidden flex items-center gap-3">
+            <a
+              href="tel:7880164004"
+              className="p-2.5 rounded-full bg-gradient-to-r from-red-500 to-rose-600 text-white shadow-md shadow-red-500/20 animate-pulse flex items-center justify-center"
+              aria-label="Call Now"
+            >
+              <Phone className="w-5 h-5 fill-current" />
+            </a>
+            
+            <button
+              onClick={() => setIsOpen(!isOpen)}
+              className="p-2 rounded-xl text-blue-100 hover:text-white hover:bg-white/10 focus:outline-none transition-colors"
+              aria-label="Toggle navigation menu"
+            >
+              {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            </button>
+          </div>
         </div>
       </div>
 
