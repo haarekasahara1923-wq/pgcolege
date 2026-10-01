@@ -18,6 +18,7 @@ import {
   X,
   ChevronRight,
   ExternalLink,
+  Users,
 } from "lucide-react";
 import { logoutAction } from "@/actions/auth-actions";
 import { toast } from "sonner";
@@ -30,6 +31,7 @@ const navItems = [
   { href: "/admin/contact", label: "Contact Details", icon: Phone },
   { href: "/admin/gallery", label: "Gallery", icon: ImageIcon },
   { href: "/admin/enquiries", label: "Enquiries", icon: MessageSquare },
+  { href: "/admin/affiliates", label: "Affiliate Partners", icon: Users },
 ];
 
 interface AdminSidebarProps {

@@ -146,3 +146,74 @@ model Admin {
   passwordHash String
   createdAt    DateTime @default(now())
 }
+
+model Affiliate {
+  id              String    @id @default(cuid())
+  name            String
+  resAddress      String
+  officeAddress   String
+  mobileNo        String    @unique
+  whatsappNo      String
+  email           String    @unique
+  workingArea     String
+  courses         String
+  
+  // Profile completion fields
+  businessName    String?
+  photoUrl        String?
+  bankAccountNo   String?
+  ifscCode        String?
+  aadharCardUrl   String?
+  panCardUrl      String?
+  cancelCheckUrl  String?
+  
+  // Admin managed fields
+  isApproved      Boolean   @default(false)
+  isBlocked       Boolean   @default(false)
+  commissionRate  String?
+  affiliateCode   String    @unique
+  
+  // Relations
+  students        Student[]
+  
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([affiliateCode])
+}
+
+model Student {
+  id                      String    @id @default(cuid())
+  name                    String
+  courseInterested        String
+  mobileNo                String
+  whatsappNo              String
+  
+  // Optional Govt IDs
+  aadharCardUrl           String?
+  panCardUrl              String?
+  aparIdUrl               String?
+  samagraIdUrl            String?
+  
+  // Optional Academic Records
+  tenthMarksheetUrl       String?
+  twelfthMarksheetUrl     String?
+  graduationMarksheetUrl  String?
+  
+  // Passport photo
+  photoUrl                String?
+  
+  // Status and Affiliate relation
+  affiliateId             String
+  affiliate               Affiliate @relation(fields: [affiliateId], references: [id])
+  
+  // Admin managed fields
+  admissionStatus         String    @default("PENDING") // PENDING, APPROVED, REJECTED
+  commissionPaid          Boolean   @default(false)
+  paymentProofUrl         String?
+  
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime  @updatedAt
+
+  @@index([affiliateId])
+}

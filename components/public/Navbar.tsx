@@ -93,12 +93,18 @@ export default function Navbar({ logoUrl }: NavbarProps) {
           {/* Desktop Right CTA */}
           <div className="hidden lg:flex items-center gap-3">
             <Link
-              href="/contact#enquire"
-              className="px-5 py-2.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-300 hover:to-amber-400 text-blue-950 font-bold text-sm shadow-md shadow-yellow-400/20 hover:shadow-yellow-400/30 transition-all duration-200 flex items-center gap-2 group"
+              href="/partner/join"
+              className="px-5 py-2.5 rounded-full bg-white text-blue-950 font-bold text-sm shadow-md hover:bg-gray-100 transition-all duration-200 flex items-center gap-2 group"
             >
-              <span>Enquire Now</span>
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+              <span>Join as a Partner</span>
             </Link>
+            <a
+              href="tel:7880164004"
+              className="px-5 py-2.5 rounded-full bg-gradient-to-r from-red-500 to-rose-600 hover:from-red-400 hover:to-rose-500 text-white font-bold text-sm shadow-md shadow-red-500/20 hover:shadow-red-500/30 transition-all duration-200 flex items-center gap-2 group animate-pulse"
+            >
+              <span>Call Now</span>
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
+            </a>
           </div>
 
           {/* Mobile Menu Button */}
@@ -134,15 +140,22 @@ export default function Navbar({ logoUrl }: NavbarProps) {
                 </Link>
               );
             })}
-            <div className="pt-3">
+            <div className="pt-3 space-y-3">
               <Link
-                href="/contact#enquire"
+                href="/partner/join"
                 onClick={() => setIsOpen(false)}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-yellow-400 to-amber-500 text-blue-950 font-bold text-center shadow-lg"
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-white text-blue-950 font-bold text-center shadow-md"
               >
-                <span>Enquire Now</span>
-                <ArrowRight className="w-4 h-4" />
+                <span>Join as a Partner</span>
               </Link>
+              <a
+                href="tel:7880164004"
+                onClick={() => setIsOpen(false)}
+                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-red-500 to-rose-600 text-white font-bold text-center shadow-lg animate-pulse"
+              >
+                <span>Call Now</span>
+                <ArrowRight className="w-4 h-4" />
+              </a>
             </div>
           </div>
         </div>
